@@ -51,7 +51,7 @@ be between 2 and 14 (inclusive).
 
 There is also an enum for the hand
 ranking (what kind of poker hand you get).
-We won't be doing anything with these
+-We won't be doing anything with these
 at this point, except for writing a function
 to convert from the enumerated values
 to a string.
