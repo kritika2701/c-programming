@@ -101,7 +101,7 @@ Here are some hints:
    think we iterate over all the suits?).  What if we counted wrong
    when iterating over the suits?
 
-   
+    
  - Two pairs have some subtle cases in terms of selecting the right 5
    cards for the final hand.  Remember from the reading that the way
    tie breaking works requires the final 5 card hand to be ordered:
