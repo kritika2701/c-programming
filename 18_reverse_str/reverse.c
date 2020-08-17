@@ -5,11 +5,13 @@
 void reverse(char * str) {
   //WRITE ME!
   int l=strlen(str);
-  int m=0,n=0;char tmp='0';
-  for (m=0,n=l-1;n>=l/2;m++,n--){
-    tmp=str[m];
-    str[m]=str[n];
-    str[n]=tmp;
+  if(l>=2){
+    int m=0,n=0;char tmp='0';
+    for (m=0,n=l-1;n>=l/2;m++,n--){
+      tmp=str[m];
+      str[m]=str[n];
+      str[n]=tmp;
+    }
   }
 }
 
