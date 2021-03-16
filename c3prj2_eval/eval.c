@@ -20,7 +20,8 @@ int card_ptr_comp(const void * vp1, const void * vp2) {
 
 suit_t flush_suit(deck_t * hand) {
   card_t ** card =hand-> cards;
-  card_t card1=**(card+0);
+  card_t card1;
+  card1=**(card+0);
   int s=0,h=0,d=0,c=0;
   for(size_t i=0;i<(hand->n_cards);i++){
     card1=**(card+i);
