@@ -8,7 +8,8 @@ int key(FILE *file){
   while(c=fgetc(file) !=EOF){
     if(isalpha(c)){
       c=tolower(c);
-      arr[c-'a']++;
+      c=c-'a';
+      arr[c]++;
     }
   }
   int m=0,j=0;
