@@ -1,0 +1,7 @@
+Grading at Sat May  8 05:07:37 UTC 2021
+Attempting to compile breaker.c 
+gcc -o breaker -pedantic -Wall -Werror breaker.c
+Makefile:2: recipe for target 'breaker' failed
+The code did not compile!
+
+Overall Grade: F
