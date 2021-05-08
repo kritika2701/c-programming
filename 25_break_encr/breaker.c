@@ -5,7 +5,7 @@
 int key(FILE *file){
   int arr[26]={0};
   int c;
-  while(c=fgetc(file) !=EOF){
+  while((c=fgetc(file)) !=EOF){
     if(isalpha(c)){
       c=tolower(c);
       c=c-'a';
