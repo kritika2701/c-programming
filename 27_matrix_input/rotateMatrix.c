@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 void readM(char m[10][10],FILE *f){
-  int c=0,i=0,j=0;
+  int c,i=0,j=0;
   while((c=fgetc(f))!=EOF){
     if(c=='\n'){
       if(j!=10){
@@ -25,11 +25,11 @@ void readM(char m[10][10],FILE *f){
 }
 
 void rotate(char m[10][10]){
-  int l=0,r=0;
+  int s=10; int l,r;
   char tmp;
-  for(int i=0;i<10;i++){
+  for(int i=0;i<s;i++){
     l=0;
-    r=9;
+    r=s-1;
     while(l<r){
       tmp=m[i][l];
       m[i][l]=m[i][r];
@@ -37,11 +37,11 @@ void rotate(char m[10][10]){
       l++;r--;
     }
   }
-  int x=0,y=0;
-  for(int i=0;i<9;i++){
-    for(int j=0;j<9;j++){
-      x=9-j;
-      y=9-i;
+  int x,y;
+  for(int i=0;i<s-1;i++){
+    for(int j=0;j<s-1;j++){
+      x=s-1-j;
+      y=s-1-i;
       tmp=m[i][j];
       m[i][j]=m[x][y];
       m[x][y]=tmp;
@@ -69,11 +69,11 @@ int main(int argc, char ** argv){
   
   char m[10][10];
   readM(m,f);
+  rotate(m);
+  print(m);
   if((fclose(f))!=0){
     fprintf(stderr, "could not close file");
     return EXIT_FAILURE;
   }
-  rotate(m);
-  print(m);
   return EXIT_SUCCESS;
 }
