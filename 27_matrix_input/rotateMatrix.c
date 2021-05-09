@@ -5,21 +5,21 @@ void readM(char m[10][10],FILE *f){
   while((c=fgetc(f))!=EOF){
     if(c=='\n'){
       if(j!=10){
-	fprintf(stderr, "invalid number of row elements");
+	fprintf(stderr, "invalid number of row elements\n");
 	exit(EXIT_FAILURE);
       }
       i++;j=0;
       continue;
     }
     if(i>=10){
-      fprintf(stderr, "extra row");
+      fprintf(stderr, "extra row\n");
       exit(EXIT_FAILURE);
     }
     m[i][j]=c;
     j++;
   }
   if(i<10){
-    fprintf(stderr, "less rows");
+    fprintf(stderr, "less rows\n");
     exit(EXIT_FAILURE);
   }
 }
@@ -58,12 +58,12 @@ void print(char m[10][10]){
 }
 int main(int argc, char ** argv){
   if(argc!=2){
-    fprintf(stderr, "invalid number of inputs");
+    fprintf(stderr, "invalid number of inputs\n");
     return EXIT_FAILURE;
   }
   FILE * f=fopen(argv[1],"r");
   if(f==NULL){
-    fprintf(stderr,"could not open file");
+    fprintf(stderr,"could not open file\n");
     return EXIT_FAILURE;
   }
   
@@ -72,7 +72,7 @@ int main(int argc, char ** argv){
   rotate(m);
   print(m);
   if((fclose(f))!=0){
-    fprintf(stderr, "could not close file");
+    fprintf(stderr, "could not close file\n");
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
