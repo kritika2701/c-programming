@@ -86,7 +86,7 @@ deck_t * build_remaining_deck(deck_t ** hands, size_t n_hands){
   deck->n_cards=0;
   deck->cards=NULL;
   for(size_t i=0;i<n_hands;i++){
-    for(int x=0;c<hands[i]->n_cards;x++){
+    for(int x=0;x<hands[i]->n_cards;x++){
       deck->cards=realloc(deck->cards, (deck->n_cards+1)*sizeof(*deck->cards));
       deck->cards[deck->n_cards]=hands[i]->cards[x];
       deck->n_cards++;
