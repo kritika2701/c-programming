@@ -1,96 +1,90 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <ctype.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
+#include<ctype.h>
 #include "cards.h"
 #include "deck.h"
 #include "eval.h"
 #include "future.h"
 #include "input.h"
 
-int win_hand(deck_t ** deck_array, int n_hands){
-  int w[n_hands+1];
-  for(int u=0;u<n_hands+1;u++)
-    w[u]=0;
-  int v=0;
-  for(int i=0;i<n_hands-1;i++){
-    for(int j=i+1;j<n_hands;j++){
-      v=compare_hands(deck_array[i],deck_array[j]);
-      if(v>0)
-	w[i]++;
-      else if(v<0)
-	w[j]++;
-      else
-	w[n_hands]++;
-    }
-  }
-  unsigned largest=0;
-  for(int x=0;x<n_hands+1;x++){
-    if(w[x]>w[largest])
-      largest=x;
-  }
-  int count=0;
-  if(w[n_hands]>0){
-    for(int x=0;x<n_hands+1;x++){
-      if(w[x]==w[largest])
-	count++;
-    }
-  }
-  if(count>1)
-    return n_hands;
-  return largest;
-}
-
-
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv){
   if(argc<2){
     fprintf(stderr, "not enough arguments\n");
     return EXIT_FAILURE;
   }
-  FILE * f=fopen(argv[1],"r");
-  if(f  == NULL){
+  FILE * f = fopen(argv[1],"r");
+  if(f == NULL){
     fprintf(stderr, "could not open file\n");
     return EXIT_FAILURE;
   }
-  deck_t ** deck_array=NULL;
-  size_t n_hands=0;
+
   future_cards_t * fc=malloc(sizeof(*fc));
-  fc->decks=NULL;
+  fc->decks=malloc(sizeof(*fc->decks));
   fc->n_decks=0;
-  deck_array=read_input(f,&n_hands,fc);
-  //creating deck with remaining cards
-  deck_t * sh=build_remaining_deck(deck_array, n_hands);
-  int win_array[n_hands+1];
-  for(int u=0;u<n_hands+1;u++)
-    win_array[u]=0;
-  int num_trials=10000;
+
+  size_t n_hands=0;
+  deck_t ** hands=read_input(f, &n_hands, fc);
+  deck_t * deck_remain=build_remaining_deck(hands, n_hands);
+  unsigned *win_count=malloc((n_hands+1)*sizeof(*win_count));
+
+  for(size_t i=0; i<n_hands+1; i++)
+    win_count[i]=0;
+
+  unsigned num_trials =10000;
   if(argc==3)
     num_trials=atoi(argv[2]);
-  for(int i=0;i<num_trials;i++){
-    shuffle(sh);
-    future_cards_from_deck(sh,fc);
-    int c=win_hand(deck_array, n_hands);
-    win_array[c]++;
+
+  size_t round=0;
+  while(round<num_trials){
+    shuffle(deck_remain);
+    future_cards_from_deck(deck_remain, fc);
+    deck_t * temp_win=hands[0];
+    size_t win_hand=0;
+    size_t n_tie=0;
+    for(size_t i=1; i<n_hands; i++){
+      int result=compare_hands(hands[i], temp_win);
+      if(result==1){
+	temp_win=hands[i];
+	win_hand=i;
+	n_tie=0;
+      }
+      else if(result==0){
+	n_tie++;
+      }
+    }
+    if(n_hands-1 == n_tie)
+      win_count[n_hands]++;
+    else
+      win_count[win_hand]++;
+    round++;
   }
-  for(size_t j=0;j<n_hands;j++){
-    printf("Hand %zu won %u / %u times (%.2f%%)\n",j,win_array[j],num_trials,(((float)win_array[j])/num_trials)*100);
+
+  for(size_t i=0; i<n_hands; i++){
+    printf("Hand %zu won %u / %u times (%.2f%%)\n",i,win_count[i], num_trials, 100.0*win_count[i]/(float)num_trials);
   }
-  printf("And there were %u ties\n",win_array[n_hands]);
-  //free memory
-  for(int x=0;x<n_hands;x++){
-    free_deck(deck_array[x]);
-  }
-  free(deck_array);
-  for(int o=fc->n_decks-1;o>=0;o--){
-    if(fc->decks[o].n_cards!=0)
-      free(fc->decks[o].cards);
+  printf("And there were %u ties\n", win_count[n_hands]);
+
+  free(win_count);
+  free_deck(deck_remain);
+
+  for(size_t i=0; i<n_hands; i++)
+    free_deck(hands[i]);
+  free(hands);
+
+  for(size_t i=0; i<fc->n_decks; i++){
+    if(fc->decks[i].n_cards>0){
+      free(fc->decks[i].cards);
+    }
   }
   free(fc->decks);
   free(fc);
-  free_deck(sh);
-  if((fclose(f))!=0){
-    fprintf(stderr,"could not close the file\n");
+
+  if(fclose(f)!=0){
+    fprintf(stderr, "could not close file\n");
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
+
+  
