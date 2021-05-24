@@ -40,7 +40,8 @@ int win_hand(deck_t ** deck_array, int n_hands){
     return n_hands;
   return largest;
 }
-      
+
+
 int main(int argc, char ** argv) {
   if(argc<2){
     fprintf(stderr, "not enough arguments\n");
@@ -53,7 +54,7 @@ int main(int argc, char ** argv) {
   }
   deck_t ** deck_array=NULL;
   size_t n_hands=0;
-  future_cards_t * fc=malloc (sizeof(*fc));
+  future_cards_t * fc=malloc(sizeof(*fc));
   fc->decks=NULL;
   fc->n_decks=0;
   deck_array=read_input(f,&n_hands,fc);
@@ -62,11 +63,9 @@ int main(int argc, char ** argv) {
   int win_array[n_hands+1];
   for(int u=0;u<n_hands+1;u++)
     win_array[u]=0;
-  int num_trials;
+  int num_trials=10000;
   if(argc==3)
     num_trials=atoi(argv[2]);
-  else
-    num_trials=10000;
   for(int i=0;i<num_trials;i++){
     shuffle(sh);
     future_cards_from_deck(sh,fc);
@@ -89,7 +88,7 @@ int main(int argc, char ** argv) {
   free(fc->decks);
   free(fc);
   free_deck(sh);
-  if(fclose(f)!=0){
+  if((fclose(f))!=0){
     fprintf(stderr,"could not close the file\n");
     return EXIT_FAILURE;
   }
